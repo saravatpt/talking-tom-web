@@ -1,70 +1,106 @@
-# Getting Started with Create React App
+# Talking Tom AI
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An interactive web application featuring a 3D animated character that responds to voice input using Google's Gemini AI. The character listens to user speech, processes it through the Gemini AI API, and responds with synthesized speech while displaying the 3D model.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Voice Interaction**: Uses Web Speech API for speech-to-text and text-to-speech functionality
+- **AI Integration**: Powered by Google's Gemini AI for natural conversation
+- **3D Visualization**: Renders a 3D character model using Babylon.js
+- **Responsive Design**: Works on both desktop and mobile browsers
+- **Real-time Interaction**: Immediate voice responses with the ability to interrupt and start new queries
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- React (Create React App)
+- Babylon.js for 3D rendering
+- Google Gemini AI API
+- Web Speech API (Speech Recognition & Speech Synthesis)
+- Environment variables for secure API key management
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Prerequisites
 
-### `npm test`
+Before running this project, you need:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Node.js and npm installed
+2. A Google Gemini AI API key
+3. A modern web browser that supports the Web Speech API
 
-### `npm run build`
+## Setup
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository:
+```bash
+git clone https://github.com/saravatpt/talking-tom-web.git
+cd talking-tom-web
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Install dependencies:
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Create a `.env` file in the project root and add your Gemini API key:
+```
+REACT_APP_GEMINI_API_KEY=your_api_key_here
+```
 
-### `npm run eject`
+4. Start the development server:
+```bash
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+5. Open [http://localhost:3000](http://localhost:3000) to view it in your browser
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Usage
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Allow microphone access when prompted by your browser
+2. Click the "Push to Talk" button
+3. Speak your message
+4. Wait for the AI to process and respond through the 3D character
+5. To interrupt the AI's response and ask a new question, click "Push to Talk" again
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Development Scripts
 
-## Learn More
+- `npm start` - Runs the app in development mode
+- `npm test` - Launches the test runner
+- `npm run build` - Builds the app for production
+- `npm run eject` - Ejects from Create React App (one-way operation)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Project Structure
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+talking-tom-web/
+  ├── public/
+  │   └── models/        # 3D model files
+  ├── src/
+  │   ├── App.js        # Main application logic
+  │   ├── App.css       # Styles
+  │   └── index.js      # Entry point
+  ├── .env              # Environment variables (not in repo)
+  └── package.json      # Dependencies and scripts
+```
 
-### Code Splitting
+## Security Notes
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- The Gemini API key is stored in a `.env` file which is not committed to the repository
+- The `.gitignore` file ensures sensitive information is not exposed
+- Always use environment variables for API keys and secrets
 
-### Analyzing the Bundle Size
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+This project is open source and available under the [MIT License](LICENSE).
 
-### Making a Progressive Web App
+## Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### Advanced Configuration
+## Acknowledgments
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- 3D model source: [Stylized Robot Model from Sketchfab](https://sketchfab.com)
+- Create React App for the initial project setup
+- Babylon.js community for 3D rendering capabilities
+- Google's Gemini AI platform for natural language processing
