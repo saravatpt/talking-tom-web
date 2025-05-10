@@ -1,54 +1,93 @@
 import React, { useState, useEffect, useRef, Suspense } from 'react'; // Added Suspense
 import { Engine, Scene, useScene, SceneLoaderContextProvider } from 'react-babylonjs'; // Added useScene, SceneLoaderContextProvider
 import { Vector3, Color3, SceneLoader, AnimationGroup } from '@babylonjs/core'; // Added SceneLoader, AnimationGroup
-import '@babylonjs/loaders'; // Import loaders for glb/gltf
+import '@babylonjs/loaders';
 import './App.css';
 
 // Component to load and display the 3D character
-const CharacterModel = ({ modelUrl }) => {
+const CharacterModel = ({ modelUrl, isSpeaking }) => {
   const scene = useScene();
   const modelRef = useRef(null);
+  const animationRef = useRef(null);
 
   useEffect(() => {
     if (scene) {
-      const modelFilename = modelUrl.split('/').pop(); // Get filename e.g., "stylized_robot_0_9_max.glb"
-      const modelRootUrl = modelUrl.substring(0, modelUrl.lastIndexOf('/') + 1); // Get directory e.g., "/models/"
+      const modelFilename = modelUrl.split('/').pop();
+      const modelRootUrl = modelUrl.substring(0, modelUrl.lastIndexOf('/') + 1);
 
+      console.log('Attempting to load model:', {
+        modelFilename,
+        modelRootUrl,
+        fullPath: modelUrl
+      });
+
+      // Load the GLB file
       SceneLoader.ImportMesh(
-        "", // meshNames - empty to load all
-        modelRootUrl, // rootUrl - path to the directory
-        modelFilename, // sceneFilename - the actual filename
+        "", // meshNames
+        modelRootUrl,
+        modelFilename,
         scene,
         (meshes, particleSystems, skeletons, animationGroups) => {
           console.log("Model loaded successfully!", meshes);
           if (meshes.length > 0) {
-            modelRef.current = meshes[0]; // Store reference to the root mesh
+            const rootMesh = meshes[0];
+            modelRef.current = rootMesh;
 
-            // Scale the model up significantly
-            modelRef.current.scaling = new Vector3(12.0, 12.0, 12.0); // Adjust these values as needed (Increased from 6.0)
-            // Ensure it sits on the ground plane (Y=0)
-            modelRef.current.position = new Vector3(0, 0, 0);
+            // Scale and position the model (adjust scale if needed)
+            rootMesh.scaling = new Vector3(10.0, 10.0, 10.0); // Start with larger scale for GLB
+            rootMesh.position = new Vector3(0, 0, 0);
+            rootMesh.rotate(new Vector3(0, Math.PI, 0), Math.PI); // Face the camera
 
-            // Log available animations
-            console.log("Available Animation Groups:", animationGroups);
-            // TODO: Store animation groups for later use (idle, talking, etc.)
+            // Store animation data (Temporarily disable processing)
+            // if (animationGroups && animationGroups.length > 0) {
+            //   console.log("Available animations:", animationGroups);
+            //   animationRef.current = animationGroups[0]; // Store the talking animation
+              
+            //   // Stop any playing animations initially
+            //   animationGroups.forEach(ag => {
+            //     ag.stop();
+            //     ag.reset();
+            //   });
+            // }
           }
         },
         null, // onProgress
-        (scene, message, exception) => { // onError
+        (scene, message, exception) => {
           console.error("Error loading model:", message, exception);
         }
       );
     }
+
+    // Cleanup
+    return () => {
+      if (animationRef.current) {
+        animationRef.current.stop();
+      }
+    };
   }, [scene, modelUrl]);
 
-  // Return null or a placeholder while loading, actual model is added via SceneLoader
-  return null;
+  // Handle speaking state changes (Temporarily disable)
+  // useEffect(() => {
+  //   if (animationRef.current) {
+  //     if (isSpeaking) {
+  //       if (!animationRef.current.isPlaying) {
+  //         animationRef.current.start(true); // true for looping
+  //       }
+  //     } else {
+  //       if (animationRef.current.isPlaying) {
+  //         animationRef.current.stop();
+  //         animationRef.current.reset();
+  //       }
+  //     }
+  //   }
+  // }, [isSpeaking]);
+
+  return null; // Actual mesh is added to the scene
 };
 
 
 // Main 3D Scene Setup
-const CharacterScene = () => {
+const CharacterScene = ({ isSpeaking }) => {
   return (
     <>
       <arcRotateCamera
@@ -73,11 +112,11 @@ const CharacterScene = () => {
       <Suspense fallback={<box name="loadingBox" size={1} position={new Vector3(0, 1, 0)} />}>
          {/* Context provider is needed for SceneLoader */}
          <SceneLoaderContextProvider>
-            <CharacterModel modelUrl="/models/stylized_robot_0_9_max.glb" />
+            <CharacterModel modelUrl="/models/stylized_robot_0_9_max.glb" isSpeaking={isSpeaking} />
          </SceneLoaderContextProvider>
       </Suspense>
 
-      {/* <ground name="ground1" width={6} height={6} subdivisions={2} receiveShadows={true} /> */}
+      <ground name="ground1" width={6} height={6} subdivisions={2} receiveShadows={true} />
     </>
   );
 };
@@ -242,7 +281,7 @@ function App() {
         <div style={{ height: '400px', width: '100%', border: '1px solid lightgrey', marginBottom: '20px' }}>
           <Engine antialias adaptToDeviceRatio canvasId="babylonJS">
             <Scene>
-              <CharacterScene />
+              <CharacterScene isSpeaking={isSpeaking} />
             </Scene>
           </Engine>
         </div>
